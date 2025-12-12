@@ -272,5 +272,5 @@ body.dark .tick4 {
   overflow: visible;
 }
 #gaugeTemplate .gpa-value {
-  transform: translate(+0, +0);
+  transform: translate(0, -50%);
 }
