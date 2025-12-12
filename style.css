@@ -1,276 +1,414 @@
 /* ===========================
-   GLOBAL STYLES + DARK MODE
+   FULL STYLES — REPLACE YOUR CSS
+   - centers GPA text inside bubble
+   - ensures SVG sits behind text
+   - restores consistent button styles
 =========================== */
+
+/* ===== Global & Theme ===== */
+:root {
+    --bg: #f5f8ff;
+    --card: #ffffff;
+    --accent: #4aa1ff;
+    --muted: #9fb0d1;
+    --border: #e6eefc;
+    --text: #233044;
+    --shadow: rgba(16, 24, 40, 0.08);
+    --gpa-vertical-nudge: 0%;
+    /* tweak to nudge gpa text up/down */
+}
+
 body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: #f4f6f8;
-  color: #111;
-  transition: background 0.3s, color 0.3s;
+    margin: 24px;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: var(--bg);
+    color: var(--text);
+    transition: background .20s, color .20s;
 }
 
 body.dark {
-  background: #0f1214;
-  color: #e6e6e6;
+    --bg: #0f1724;
+    --card: #111827;
+    --text: #e6f0ff;
+    --muted: #94a6c0;
+    --border: #213043;
 }
 
-.muted {
-  font-size: 12px;
-  color: #67727e;
+/* Container */
+.container {
+    max-width: 940px;
+    margin: 0 auto;
 }
 
-body.dark .muted {
-  color: #8b97a4;
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
-/* ===========================
-   SEMESTER + LAYOUT
-=========================== */
+header h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+/* Dark mode toggle (small top-right switch) */
+#darkModeToggle {
+    width: 46px;
+    height: 24px;
+    border-radius: 999px;
+    background: #f0f3fb;
+    border: 1px solid #e6eafc;
+    position: relative;
+    cursor: pointer;
+}
+
+#darkModeToggle.on {
+    background: var(--accent);
+}
+
+#darkModeToggle .knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .18s;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+}
+
+#darkModeToggle.on .knob {
+    transform: translateX(22px);
+}
+
+/* ===== Semester Card ===== */
 #semesters {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 20px;
-  max-width: 850px;
-  margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 8px;
 }
 
 .semester {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  position: relative;
+    position: relative;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px var(--shadow);
+    min-height: 180px;
+    padding-bottom: 120px;
+    /* reserve space for gauge bubble */
 }
 
-body.dark .semester {
-  background: #161a1d;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+.semester::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    background: #2fb9ff;
+    border-radius: 12px 0 0 12px;
 }
 
-/* ===========================
-   HEADER CONTROLS
-=========================== */
-.semester .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Header inside semester */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.semester .title {
-  font-size: 20px;
-  font-weight: 600;
+.title {
+    font-size: 18px;
+    font-weight: 600;
 }
 
-/* Toggle Switch */
+.controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Toggle inside semester */
 .toggle-switch {
-  width: 38px;
-  height: 20px;
-  border-radius: 20px;
-  background: #b8c2cc;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.25s;
+    width: 42px;
+    height: 22px;
+    border-radius: 999px;
+    background: #f0f3fb;
+    border: 1px solid #e6eafc;
+    position: relative;
+    cursor: pointer;
 }
+
 .toggle-switch.on {
-  background: #4f9cfa;
+    background: var(--accent);
 }
+
 .toggle-switch .knob {
-  width: 16px;
-  height: 16px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.25s;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .18s;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
 }
+
 .toggle-switch.on .knob {
-  transform: translateX(18px);
+    transform: translateX(20px);
 }
 
-/* Delete buttons */
-.circle {
-  border: none;
-  background: #e1e6eb;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  line-height: 24px;
-  text-align: center;
-  padding: 0;
-}
-body.dark .circle {
-  background: #2a3137;
-}
-
-/* ===========================
-   COURSE ROWS
-=========================== */
+/* ===== Rows ===== */
 .rows {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 14px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .row {
-  display: grid;
-  grid-template-columns: 1fr 90px 80px 90px 30px;
-  gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr 88px 86px 96px 40px;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
 }
 
 .row input,
 .row select {
-  padding: 8px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #cfd5db;
-  background: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
 }
 
-body.dark .row input,
-body.dark .row select {
-  background: #1e2427;
-  border-color: #3b454d;
-  color: #e6e6e6;
+.row select:disabled {
+    background: #f3f6fb;
+    color: var(--muted);
 }
 
-.add-btn {
-  background: #4f9cfa;
-  border: none;
-  padding: 8px 14px;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+/* ===== Buttons (consistent styling) ===== */
+.button-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: background .15s, border-color .15s, color .15s, transform .06s;
 }
 
-/* ===========================
-   FOOTER
-=========================== */
-.semester .footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  align-items: center;
+/* circle icon buttons (delete row/sem) */
+.circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
 }
 
-.semester .footer strong {
-  font-size: 18px;
+.circle:hover {
+    transform: translateY(-1px);
 }
 
-/* ===========================
-   CUMULATIVE GPA GAUGE
-=========================== */
+/* Add course button (inline left in footer) */
+.add-course-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #f0f5ff;
+    color: #2b6cff;
+    border: 1px solid var(--border);
+}
 
-/* Gauge container bubble */
+.add-course-btn:hover {
+    background: #e3edff;
+}
+
+/* Add semester main CTA */
+.add-semester-btn {
+    margin-top: 12px;
+    padding: 10px 18px;
+    border-radius: 28px;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+/* ===== Footer layout (semester GPA + add course on same left line) ===== */
+.sem-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.sem-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sem-gpa-label {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.sem-gpa-value {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.05rem;
+}
+
+/* ===== Gauge bubble (positioned inside semester) =====
+   IMPORTANT:
+   - gaugeTemplate should be appended into the .semester element by JS
+   - it is absolutely positioned relative to .semester
+*/
+.gauge-wrap,
 #gaugeTemplate {
-  margin: 20px auto 0 auto;
-  width: 160px;
-  height: 160px;
-  background: white;
-  border-radius: 16px;
-  padding: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  position: relative;   /* IMPORTANT: allows text overlay */
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    right: 18px;
+    bottom: 8px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px var(--shadow);
+    pointer-events: none;
+    z-index: 40;
 }
 
-body.dark #gaugeTemplate {
-  background: #181d20;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.45);
+/* Make SVG fill the container and be behind text */
+.gauge-wrap svg,
+#gaugeTemplate svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* behind text */
 }
 
-/* Centered GPA text inside the gauge */
+/* Text centered on top of the SVG */
+.gauge-wrap .gpa-value,
 #gaugeTemplate .gpa-value {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  pointer-events: none;
+    position: absolute;
+    top: calc(50% + var(--gpa-vertical-nudge));
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 20;
+    /* above svg */
+    pointer-events: none;
 }
 
+.gauge-wrap .gpa-value .val,
 #gaugeTemplate .gpa-value .val {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 4px;
+    font-size: 26px;
+    font-weight: 700;
 }
 
+.gauge-wrap .gpa-value .muted,
 #gaugeTemplate .gpa-value .muted {
-  font-size: 12px;
-  opacity: 0.75;
+    font-size: 12px;
+    color: var(--muted);
 }
 
-/* ===========================
-   SVG ARC STYLING
-=========================== */
+/* SVG arc styling */
 .arc-bg {
-  stroke: #d4d9de;
-  stroke-width: 10;
-  fill: none;
-}
-
-body.dark .arc-bg {
-  stroke: #3b454d;
+    stroke: #d4d9de;
+    stroke-width: 10;
+    fill: none;
 }
 
 .arc-fg {
-  stroke: #4f9cfa;
-  stroke-width: 10;
-  fill: none;
-  stroke-linecap: round;
+    stroke: var(--accent);
+    stroke-width: 10;
+    fill: none;
+    stroke-linecap: round;
 }
 
 .tick0,
 .tick4 {
-  font-size: 12px;
-  fill: #4b5563;
+    font-size: 11px;
+    fill: var(--muted);
 }
 
-body.dark .tick0,
-body.dark .tick4 {
-  fill: #97a6b3;
+/* ===== Dark-mode touches ===== */
+body.dark .add-course-btn {
+    background: #18304a;
+    color: #bcd9ff;
+    border-color: #27455f;
 }
 
-/* ===========================
-   DARK MODE BUTTON
-=========================== */
-#darkModeToggle {
-  position: fixed;
-  top: 18px;
-  right: 18px;
-  width: 48px;
-  height: 24px;
-  background: #b8c2cc;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background 0.25s;
+body.dark .circle {
+    background: #0f1720;
+    border-color: #22313c;
+    color: #dcefff;
 }
-#darkModeToggle.on {
-  background: #4f9cfa;
+
+body.dark .gauge-wrap,
+body.dark #gaugeTemplate {
+    background: #0f1724;
+    border-color: #213043;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
-#darkModeToggle .knob {
-  width: 20px;
-  height: 20px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.25s;
+
+body.dark .arc-bg {
+    stroke: #233040;
 }
-#darkModeToggle.on .knob {
-  transform: translateX(24px);
+
+body.dark .arc-fg {
+    stroke: #73a9ff;
 }
-#gaugeTemplate svg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-#gaugeTemplate .gpa-value {
-  transform: translate(-50%, -50%);
+
+/* ===== Responsive ===== */
+@media (max-width:880px) {
+    .row {
+        grid-template-columns: 1fr 76px 72px 76px 36px;
+    }
+
+    .gauge-wrap,
+    #gaugeTemplate {
+        right: 12px;
+        bottom: 8px;
+        width: 120px;
+        height: 120px;
+    }
+
+    .gauge-wrap .gpa-value .val,
+    #gaugeTemplate .gpa-value .val {
+        font-size: 22px;
+    }
 }
