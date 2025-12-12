@@ -265,3 +265,12 @@ body.dark .tick4 {
 #darkModeToggle.on .knob {
   transform: translateX(24px);
 }
+#gaugeTemplate svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+#gaugeTemplate .gpa-value {
+  transform: translate(+0, +0);
+}
