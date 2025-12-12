@@ -1,170 +1,325 @@
 :root {
     --bg: #f5f8ff;
-    --card: #fff;
-    --accent: #4aa1ff;
-    --muted: #9fb0d1;
-    --border: #e6eefc;
+    --card-bg: #ffffff;
+    --text: #1c2b33;
+    --subtle: #7a8a99;
+    --border: #e3e7ef;
+    --blue: #1b8cff;
+    --shadow: rgba(17, 24, 39, 0.08);
+    --gpa-arc: #1b3c70;
+    --gpa-bg-arc: #dce4f2;
 }
 
-* {
-    box-sizing: border-box
+body.dark {
+    --bg: #0c0f17;
+    --card-bg: #161b26;
+    --text: #eaf1ff;
+    --subtle: #9aacbf;
+    --border: #2a3547;
+    --blue: #3aa0ff;
+    --shadow: rgba(0, 0, 0, 0.35);
+    --gpa-arc: #b7d7ff;
+    --gpa-bg-arc: #334055;
 }
 
 body {
-    font-family: Inter, system-ui, Arial;
-    margin: 24px;
+    margin: 0;
     background: var(--bg);
-    color: #233044
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
 }
 
-.container {
-    max-width: 940px;
-    margin: 0 auto
-}
+/* ---------- Top Header ---------- */
 
-.semester {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 36px;
-    border: 1px solid #eef6ff;
-    position: relative;
-    min-height: 160px
-}
-
-.header {
+header {
+    width: 100%;
+    padding: 32px 42px 10px 42px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px
+    box-sizing: border-box;
 }
 
-.title {
-    font-size: 18px;
-    font-weight: 600
+header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
 }
 
-.controls {
+.toggle-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px
+    gap: 12px;
 }
 
-.toggle {
-    width: 46px;
-    height: 26px;
-    border-radius: 999px;
-    background: #f0f3fb;
-    border: 1px solid #e6eafc;
+.switch {
+    width: 44px;
+    height: 24px;
+    background: var(--border);
+    border-radius: 20px;
     position: relative;
-    cursor: pointer
+    cursor: pointer;
+    transition: 0.25s;
 }
 
-.toggle.on {
-    background: #d8f0ff
-}
-
-.knob {
+.switch::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
-    transition: transform .18s
+    transition: 0.25s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.toggle.on .knob {
-    transform: translateX(20px)
+.switch.active {
+    background: var(--blue);
 }
 
-.rows {
-    margin-top: 8px
+.switch.active::after {
+    left: 22px;
 }
 
-.row {
-    display: grid;
-    grid-template-columns: 1fr 88px 86px 96px 40px;
-    gap: 10px;
-    align-items: center;
-    padding: 8px;
-    border-radius: 8px;
-    background: #fff;
-    border: 1px solid #f3f7ff;
-    margin-bottom: 8px
+/* ---------- Layout ---------- */
+
+.container {
+    padding: 10px 42px 60px;
+    box-sizing: border-box;
+    max-width: 1280px;
+    margin: auto;
 }
 
-input,
-select {
-    padding: 10px;
-    border-radius: 8px;
+/* ---------- Semester Card ---------- */
+
+.semester-card {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 34px 36px 46px;
+    box-shadow: 0 4px 18px var(--shadow);
     border: 1px solid var(--border);
-    background: #fbfdff
+    margin-bottom: 60px;
 }
 
-select:disabled {
-    background: #f3f6fb;
-    color: #9fb0d1
+.semester-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    background: #2fb9ff;
+    border-radius: 14px 0 0 14px;
 }
 
-.circle {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e6eefc;
-    background: #fff;
-    cursor: pointer
-}
-
-.footer {
+/* Header row */
+.sem-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px
+    margin-bottom: 22px;
 }
 
-.add-btn {
-    padding: 8px 12px;
-    border-radius: 18px;
-    border: 1px solid #bcd4ff;
-    background: #eaf4ff;
-    cursor: pointer
+.sem-header h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
 }
 
-.gauge-wrap {
+.sem-weight-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weight-switch {
+    width: 42px;
+    height: 22px;
+    background: var(--border);
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.weight-switch::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
     position: absolute;
-    right: 18px;
-    bottom: -48px;
+    top: 2px;
+    left: 2px;
+    transition: 0.25s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.weight-switch.active {
+    background: var(--blue);
+}
+
+.weight-switch.active::after {
+    left: 22px;
+}
+
+/* X button */
+.close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.close-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--subtle);
+}
+
+/* ---------- Table ---------- */
+
+.table-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.col {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text);
+    flex-shrink: 0;
+}
+
+.col.name {
+    width: 260px;
+}
+
+.col.grade {
+    width: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.col.credits {
+    width: 120px;
+}
+
+.col.weight {
     width: 140px;
-    height: 140px;
-    pointer-events: none
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.weight.enabled {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.table-row .close-btn {
+    margin-left: 10px;
+}
+
+/* ---------- Footer ---------- */
+
+.sem-footer {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    margin-top: 26px;
+}
+
+.sem-footer span {
+    font-size: 19px;
+}
+
+.add-course-btn {
+    height: 42px;
+    padding: 0 20px;
+    border-radius: 30px;
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.add-semester-btn {
+    margin-top: 40px;
+    width: fit-content;
+    padding: 14px 26px;
+    font-size: 19px;
+    color: var(--blue);
+    border-radius: 40px;
+    border: 2px solid var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+/* ---------- GPA Bubble ---------- */
+
+.gpa-bubble {
+    position: absolute;
+    bottom: -70px;
+    right: -20px;
+    width: 210px;
+    height: 210px;
+}
+
+.gpa-bubble svg {
+    width: 210px;
+    height: 210px;
 }
 
 .gpa-value {
     position: absolute;
-    right: 28px;
-    bottom: -24px;
-    width: 100px;
+    top: 66px;
+    left: 0;
+    width: 100%;
     text-align: center;
-    font-weight: 700
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--gpa-arc);
 }
 
-.gpa-value .val {
-    font-size: 26px
+.gpa-label {
+    position: absolute;
+    top: 110px;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    color: var(--subtle);
 }
 
-.muted {
-    color: var(--muted);
-    font-size: 13px
+.tick {
+    position: absolute;
+    font-size: 15px;
+    color: var(--subtle);
 }
 
-@media (max-width:880px) {
-    .row {
-        grid-template-columns: 1fr 76px 72px 76px 36px
-    }
+.tick.left {
+    bottom: 24px;
+    left: 18px;
+}
+
+.tick.right {
+    bottom: 24px;
+    right: 18px;
 }
