@@ -1,39 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GPA Calculator</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="container">
-  <header>
-    <h1>GPA Calculator</h1>
-    <div class="dark-toggle">
-      <span>Dark Mode</span>
-      <div class="toggle-switch" id="darkModeToggle">
-        <div class="knob"></div>
-      </div>
+    <div class="container">
+        <header>
+            <h1>GPA Calculator</h1>
+            <div class="dark-toggle">
+                <span>Dark Mode</span>
+                <div class="toggle-switch" id="darkModeToggle">
+                    <div class="knob"></div>
+                </div>
+            </div>
+        </header>
+
+        <div id="semesters"></div>
+        <div style="margin-top:12px">
+            <button id="addSemester" class="add-btn">+ Add Semester</button>
+        </div>
     </div>
-  </header>
-  
-  <div id="semesters"></div>
-  <div style="margin-top:6px">
-    <button id="addSemester" class="add-btn">+ Add Semester</button>
-  </div>
-</div>
 
-<!-- GPA Gauge template -->
-<div id="gaugeTemplate" style="display:none">
-  <svg viewBox="0 0 140 140" class="gauge-svg" width="140" height="140">
-    <path class="arc-bg" stroke="#eef6ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
-    <path class="arc-fg" stroke="#4aa1ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
-    <text class="tick0" font-size="10" fill="#9fb0d1">0.0</text>
-    <text class="tick4" font-size="10" fill="#9fb0d1">4.0</text>
-  </svg>
-</div>
+    <!-- GPA Gauge template -->
+    <div id="gaugeTemplate" class="gauge-wrap" style="display:none">
+        <svg viewBox="0 0 140 140" class="gauge-svg" width="140" height="140">
+            <circle cx="70" cy="70" r="60" stroke="#e6eefc" stroke-width="6" fill="none" />
+            <path class="arc-bg" stroke="#eef6ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+            <path class="arc-fg" stroke="#4aa1ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+            <text class="tick0" font-size="10" fill="#9fb0d1">0.0</text>
+            <text class="tick4" font-size="10" fill="#9fb0d1">4.0</text>
+        </svg>
+        <div class="gpa-value">
+            <div class="val">0.00</div>
+            <div class="muted">Cumulative GPA</div>
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
