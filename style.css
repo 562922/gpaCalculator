@@ -1,243 +1,170 @@
 :root {
-    /* Light Mode */
-    --bg: #f2f6ff;
-    --card: #ffffff;
-    --text: #1f2d4f;
-    --subtext: #7c89a6;
-    --field-bg: #f9fbff;
-    --field-border: #d8ddef;
-    --accent: #3b6cff;
-    --accent-soft: #eaf1ff;
-    --accent-soft-border: #cddbff;
-    --shadow: rgba(0, 0, 0, 0.06);
+    --bg: #f5f8ff;
+    --card: #fff;
+    --accent: #4aa1ff;
+    --muted: #9fb0d1;
+    --border: #e6eefc;
 }
 
-body.dark {
-    /* Soft Dark Mode */
-    --bg: #0f1624;
-    --card: #1b2332;
-    --text: #eef3ff;
-    --subtext: #94a3c5;
-    --field-bg: #242f45;
-    --field-border: #3a4a67;
-    --accent: #7ea4ff;
-    --accent-soft: #28334c;
-    --accent-soft-border: #3e4d68;
-    --shadow: rgba(0, 0, 0, 0.45);
+* {
+    box-sizing: border-box
 }
 
 body {
+    font-family: Inter, system-ui, Arial;
+    margin: 24px;
     background: var(--bg);
-    font-family: Inter, sans-serif;
-    margin: 0;
-    padding: 30px;
-    transition: background .3s;
+    color: #233044
 }
 
-/* Dark Mode Toggle */
-
-#dark-toggle-container {
-    position: fixed;
-    right: 40px;
-    top: 30px;
-    font-size: 15px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    z-index: 10;
+.container {
+    max-width: 940px;
+    margin: 0 auto
 }
-
-#dark-toggle {
-    transform: scale(1.4);
-    cursor: pointer;
-}
-
-/* Semester Card */
 
 .semester {
     background: var(--card);
-    border-radius: 16px;
-    padding: 25px 30px;
-    width: 760px;
-    margin: 0 auto 30px auto;
-    box-shadow: 0 6px 25px var(--shadow);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 36px;
+    border: 1px solid #eef6ff;
     position: relative;
-    transition: background .3s, color .3s;
+    min-height: 160px
 }
 
-.semester h2 {
-    margin-top: 0;
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--text);
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px
 }
 
-.toggle-weight {
-    position: absolute;
-    right: 30px;
-    top: 32px;
+.title {
+    font-size: 18px;
+    font-weight: 600
+}
+
+.controls {
     display: flex;
     align-items: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
+    gap: 10px
 }
 
-.toggle-weight input {
-    margin-left: 10px;
-    transform: scale(1.3);
-    cursor: pointer;
+.toggle {
+    width: 46px;
+    height: 26px;
+    border-radius: 999px;
+    background: #f0f3fb;
+    border: 1px solid #e6eafc;
+    position: relative;
+    cursor: pointer
 }
 
-/* Table */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+.toggle.on {
+    background: #d8f0ff
 }
 
-th {
-    text-align: left;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--subtext);
-    padding-bottom: 6px;
+.knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+    transition: transform .18s
 }
 
-td {
-    padding: 10px 0;
+.toggle.on .knob {
+    transform: translateX(20px)
+}
+
+.rows {
+    margin-top: 8px
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 88px 86px 96px 40px;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #f3f7ff;
+    margin-bottom: 8px
 }
 
 input,
 select {
-    width: 90%;
-    padding: 8px 10px;
-    font-size: 14px;
-    border: 1px solid var(--field-border);
+    padding: 10px;
     border-radius: 8px;
-    outline: none;
-    background: var(--field-bg);
-    color: var(--text);
-    transition: .2s;
+    border: 1px solid var(--border);
+    background: #fbfdff
 }
 
-input:focus,
-select:focus {
-    border-color: var(--accent);
+select:disabled {
+    background: #f3f6fb;
+    color: #9fb0d1
 }
 
-.remove-course {
-    cursor: pointer;
-    color: var(--subtext);
-    font-size: 20px;
-    user-select: none;
-}
-
-/* Add Course Button */
-
-.add-course-btn {
-    margin-top: 18px;
-    padding: 9px 18px;
-    border-radius: 20px;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-soft-border);
-    cursor: pointer;
-    color: var(--accent);
-    font-weight: 500;
-    font-size: 14px;
-    transition: 0.2s;
-}
-
-.add-course-btn:hover {
-    filter: brightness(1.1);
-}
-
-/* GPA inside semester */
-
-.gpa-line {
-    margin-top: 18px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-}
-
-/* Add Semester Button */
-
-#add-semester {
-    display: block;
-    margin: 20px auto;
-    padding: 12px 24px;
-    border-radius: 26px;
-    background: var(--card);
-    border: 1px solid var(--field-border);
-    cursor: pointer;
-    color: var(--text);
-    font-size: 15px;
-    font-weight: 500;
-    box-shadow: 0 4px 20px var(--shadow);
-    transition: 0.2s;
-}
-
-#add-semester:hover {
-    filter: brightness(1.06);
-}
-
-/* GPA Circle */
-
-#cumulative-box {
-    width: 190px;
-    height: 190px;
-    background: var(--card);
+.circle {
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    position: fixed;
-    right: 40px;
-    bottom: 40px;
-    box-shadow: 0 6px 35px var(--shadow);
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    flex-direction: column;
-    color: var(--text);
-    transition: background .3s, color .3s;
+    justify-content: center;
+    border: 1px solid #e6eefc;
+    background: #fff;
+    cursor: pointer
 }
 
-#cumulative-box svg {
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px
+}
+
+.add-btn {
+    padding: 8px 12px;
+    border-radius: 18px;
+    border: 1px solid #bcd4ff;
+    background: #eaf4ff;
+    cursor: pointer
+}
+
+.gauge-wrap {
     position: absolute;
-    width: 170px;
-    height: 170px;
-    transform: rotate(-90deg);
+    right: 18px;
+    bottom: -48px;
+    width: 140px;
+    height: 140px;
+    pointer-events: none
 }
 
-.ring-bg {
-    stroke: #d5dff9;
-    stroke-width: 12;
-    fill: none;
-}
-
-body.dark .ring-bg {
-    stroke: #3d4b69;
-}
-
-.ring {
-    stroke: var(--accent);
-    stroke-width: 12;
-    stroke-linecap: round;
-    fill: none;
-    transition: stroke 0.3s;
-}
-
-#cumulative-box small {
-    margin-top: 105px;
+.gpa-value {
     position: absolute;
-    font-size: 13px;
-    opacity: 0.7;
+    right: 28px;
+    bottom: -24px;
+    width: 100px;
+    text-align: center;
+    font-weight: 700
 }
 
-#cumulative-gpa {
-    font-size: 32px;
-    font-weight: 700;
-    position: absolute;
+.gpa-value .val {
+    font-size: 26px
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 13px
+}
+
+@media (max-width:880px) {
+    .row {
+        grid-template-columns: 1fr 76px 72px 76px 36px
+    }
 }
