@@ -10,7 +10,7 @@
 }
 
 * {
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 body {
@@ -18,7 +18,7 @@ body {
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     background: var(--bg);
     color: var(--text);
-    transition: background .20s, color .20s;
+    transition: background .2s, color .2s;
 }
 
 body.dark {
@@ -78,7 +78,7 @@ header h1 {
     border-radius: 50%;
     background: #fff;
     transition: transform .18s;
-    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+    box-shadow: 0 2px 6px rgba(16, 24, 40, .08);
 }
 
 #darkModeToggle.on .knob {
@@ -103,7 +103,6 @@ main#semesters {
     box-shadow: 0 2px 8px var(--shadow);
     min-height: 180px;
     padding-bottom: 120px;
-    /* reserve space for bubble */
 }
 
 .semester::before {
@@ -117,7 +116,6 @@ main#semesters {
     border-radius: 12px 0 0 12px;
 }
 
-/* header inside semester */
 .header {
     display: flex;
     justify-content: space-between;
@@ -160,7 +158,7 @@ main#semesters {
     border-radius: 50%;
     background: #fff;
     transition: transform .18s;
-    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+    box-shadow: 0 2px 6px rgba(16, 24, 40, .08);
 }
 
 .toggle-switch.on .knob {
@@ -266,7 +264,7 @@ main#semesters {
     font-size: 1.05rem;
 }
 
-/* gauge bubble (absolute inside semester) */
+/* gauge bubble */
 .gauge-wrap,
 #gaugeTemplate {
     position: absolute;
@@ -285,7 +283,6 @@ main#semesters {
     z-index: 40;
 }
 
-/* SVG inside bubble sits behind text */
 .gauge-wrap svg,
 #gaugeTemplate svg {
     width: 100%;
@@ -297,17 +294,10 @@ main#semesters {
     z-index: 10;
 }
 
-.gauge-ring {
-    fill: none;
-    stroke: #e6eefc;
-    stroke-width: 6;
-}
-
-/* text centered on top of the SVG */
 .gauge-wrap .gpa-value,
 #gaugeTemplate .gpa-value {
     position: absolute;
-    top: calc(50% + var(--gpa-vertical-nudge));
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -327,7 +317,7 @@ main#semesters {
     color: var(--muted);
 }
 
-/* arc styles */
+/* arcs */
 .arc-bg {
     fill: none;
     stroke: #d4d9de;
@@ -347,7 +337,7 @@ main#semesters {
     fill: var(--muted);
 }
 
-/* dark mode tweaks */
+/* dark tweaks */
 body.dark .row input,
 body.dark .row select {
     background: #1e2427;
@@ -364,7 +354,7 @@ body.dark .circle {
 body.dark .gauge-wrap {
     background: #0f1724;
     border-color: #213043;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .6);
 }
 
 body.dark .arc-bg {

@@ -5,10 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>GPA Calculator</title>
-
-    <!-- Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -32,24 +29,19 @@
     </div>
 
     <!-- GPA Gauge template (moved into semester by JS) -->
-    <div class="gauge-container">
-        <svg class="gauge" width="180" height="100" viewBox="0 0 200 110">
-            <path id="cumulativeGaugeBg" d="M20 100 A80 80 0 0 1 180 100" stroke="#ccc" stroke-width="14" fill="none"
-                stroke-linecap="round" />
-
-            <path id="cumulativeGaugeArc" d="M20 100 A80 80 0 0 1 20 100" stroke="var(--accent)" stroke-width="14"
-                fill="none" stroke-linecap="round" />
-
-            <text id="cumulativeGaugeText" x="100" y="72" font-size="30" text-anchor="middle"
-                alignment-baseline="middle">0.00</text>
-
-            <!-- BOTTOM LABELS § -->
-            <text id="cumulativeGaugeMin" x="52" y="104" font-size="16" text-anchor="middle">0.0</text>
-
-            <text id="cumulativeGaugeMax" x="148" y="104" font-size="16" text-anchor="middle">4.0</text>
+    <div id="gaugeTemplate" class="gauge-wrap" style="display:none">
+        <svg viewBox="0 0 140 140" class="gauge-svg" width="140" height="140">
+            <circle cx="70" cy="70" r="60" stroke="#e6eefc" stroke-width="6" fill="none" />
+            <path class="arc-bg" stroke="#eef6ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+            <path class="arc-fg" stroke="#4aa1ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+            <text class="tick0" font-size="10" fill="#9fb0d1">0.0</text>
+            <text class="tick4" font-size="10" fill="#9fb0d1">4.0</text>
         </svg>
+        <div class="gpa-value">
+            <div class="val">0.00</div>
+            <div class="muted">Cumulative GPA</div>
+        </div>
     </div>
-
 
     <script src="script.js"></script>
 </body>
