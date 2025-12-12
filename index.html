@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GPA Calculator</title>
-
-    <!-- Inter font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPA Calculator</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <header>
-        <h1>GPA Calculator</h1>
-        <div class="toggle-wrapper">
-            <div class="switch" id="darkToggle"></div>
-        </div>
-    </header>
-
-    <div class="container" id="semContainer"></div>
-
-    <div class="add-semester-btn" id="addSemester">
-        <svg width="16" height="16" stroke="var(--blue)" fill="none" stroke-width="2">
-            <line x1="8" y1="2" x2="8" y2="14" />
-            <line x1="2" y1="8" x2="14" y2="8" />
-        </svg>
-        Add Semester
+<div class="container">
+  <header>
+    <h1>GPA Calculator</h1>
+    <div class="dark-toggle">
+      <span>Dark Mode</span>
+      <div class="toggle-switch" id="darkModeToggle">
+        <div class="knob"></div>
+      </div>
     </div>
+  </header>
+  
+  <div id="semesters"></div>
+  <div style="margin-top:6px">
+    <button id="addSemester" class="add-btn">+ Add Semester</button>
+  </div>
+</div>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
+<!-- GPA Gauge template -->
+<div id="gaugeTemplate" style="display:none">
+  <svg viewBox="0 0 140 140" class="gauge-svg" width="140" height="140">
+    <path class="arc-bg" stroke="#eef6ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+    <path class="arc-fg" stroke="#4aa1ff" stroke-width="12" fill="none" stroke-linecap="round"></path>
+    <text class="tick0" font-size="10" fill="#9fb0d1">0.0</text>
+    <text class="tick4" font-size="10" fill="#9fb0d1">4.0</text>
+  </svg>
+</div>
 
+<script src="script.js"></script>
 </body>
-
 </html>
