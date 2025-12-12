@@ -139,30 +139,32 @@ function setWeightsEnabled(semId, enabled) {
 
 /* ---------- Gauge attachment & rendering ---------- */
 function attachGaugeToNewest() {
-  const sems = Array.from(container.querySelectorAll('.semester'));
+  const sems = container.querySelectorAll('.semester');
   if (sems.length === 0) {
     gaugeTemplate.style.display = 'none';
-    gaugeTemplate.setAttribute('aria-hidden', 'true');
-    document.querySelectorAll('.gpa-value').forEach(n => n.remove());
     return;
   }
 
-  // move template into newest semester
-  const newest = sems[sems.length - 1];
-  newest.appendChild(gaugeTemplate);
-  gaugeTemplate.style.display = 'flex';
-  gaugeTemplate.style.position = 'absolute';
-  gaugeTemplate.style.right = '18px';
-  gaugeTemplate.style.bottom = '8px';
-  gaugeTemplate.setAttribute('aria-hidden', 'false');
+  const last = sems[sems.length - 1];
 
-  // ensure only one numeric node
-  document.querySelectorAll('.gpa-value').forEach(n => n.remove());
+  // Move gauge to newest semester
+  last.appendChild(gaugeTemplate);
+  gaugeTemplate.style.display = 'block';
+
+  // Remove old internal text
+  const oldVal = gaugeTemplate.querySelector('.gpa-value');
+  if (oldVal) oldVal.remove();
+
+  // Add GPA text INSIDE the gauge bubble
   const valNode = document.createElement('div');
   valNode.className = 'gpa-value';
-  valNode.innerHTML = `<div class="val">0.00</div><div class="muted">Cumulative GPA</div>`;
-  newest.appendChild(valNode);
+  valNode.innerHTML = `
+      <div class="val">0.00</div>
+      <div class="muted">Cumulative GPA</div>
+  `;
+  gaugeTemplate.appendChild(valNode);
 }
+
 
 function updateAll() {
   let totalQ = 0, totalC = 0;
