@@ -1,112 +1,242 @@
-const gradeToGPA = {
-    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
-    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
-    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
-    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
-    'F': 0.0
+/* =======================
+      CONSTANTS
+======================= */
+const gradeValues = {
+    "A+": 4.0, "A": 4.0, "A-": 3.7,
+    "B+": 3.3, "B": 3.0, "B-": 2.7,
+    "C+": 2.3, "C": 2.0, "C-": 1.7,
+    "D+": 1.3, "D": 1.0, "F": 0.0
 };
 
-const rigorMultiplier = {
-    'Regular': 1.0,
-    'Honors': 1.0,
-    'AP': 1.1,
-    'IB': 1.1
+const weightValues = {
+    "None": 0,
+    "Honors": 0.5,
+    "AP/IB": 1
 };
 
-let semesters = [];
+let semesterCount = 0;
 
-function addSemester() {
-    semesters.push({ id: Date.now(), courses: [] });
-    render();
-}
+/* =======================
+  LOCAL STORAGE SAVE/LOAD
+======================= */
 
-function removeSemester(index) {
-    semesters.splice(index, 1);
-    render();
-}
+function saveState() {
+    const data = {
+        dark: document.body.classList.contains("dark"),
+        semesters: []
+    };
 
-function addCourse(semesterIndex) {
-    semesters[semesterIndex].courses.push({
-        id: Date.now(),
-        grade: 'A',
-        credits: 3,
-        rigor: 'Regular'
+    document.querySelectorAll(".semester").forEach(sem => {
+        const s = {
+            weighted: sem.querySelector(".weight-toggle").checked,
+            courses: []
+        };
+
+        sem.querySelectorAll("tbody tr").forEach(row => {
+            s.courses.push({
+                name: row.querySelector(".name").value,
+                grade: row.querySelector(".grade").value,
+                credits: row.querySelector(".credits").value,
+                weight: row.querySelector(".weight").value
+            });
+        });
+
+        data.semesters.push(s);
     });
-    render();
+
+    localStorage.setItem("gpaSoftDark", JSON.stringify(data));
 }
 
-function removeCourse(semesterIndex, courseIndex) {
-    semesters[semesterIndex].courses.splice(courseIndex, 1);
-    render();
-}
+function loadState() {
+    const saved = localStorage.getItem("gpaSoftDark");
+    if (!saved) {
+        addSemester();
+        return;
+    }
 
-function updateCourse(semesterIndex, courseIndex, field, value) {
-    semesters[semesterIndex].courses[courseIndex][field] = value;
-    render();
-}
+    const data = JSON.parse(saved);
 
-function calculateSemesterGPA(courses) {
-    if (!courses.length) return 0;
-    let totalPoints = 0, totalCredits = 0;
-    courses.forEach(c => {
-        const gpa = gradeToGPA[c.grade] * rigorMultiplier[c.rigor];
-        totalPoints += gpa * parseFloat(c.credits);
-        totalCredits += parseFloat(c.credits);
-    });
-    return (totalPoints / totalCredits).toFixed(2);
-}
+    if (data.dark) {
+        document.body.classList.add("dark");
+        document.getElementById("dark-toggle").checked = true;
+    }
 
-function calculateCumulativeGPA() {
-    let totalPoints = 0, totalCredits = 0;
-    semesters.forEach(sem => {
-        sem.courses.forEach(c => {
-            const gpa = gradeToGPA[c.grade] * rigorMultiplier[c.rigor];
-            totalPoints += gpa * parseFloat(c.credits);
-            totalCredits += parseFloat(c.credits);
+    data.semesters.forEach(s => {
+        const sem = addSemester();
+        sem.querySelector(".weight-toggle").checked = s.weighted;
+
+        const list = sem.querySelector(".course-list");
+        list.innerHTML = "";
+
+        s.courses.forEach(c => {
+            const row = addCourse(sem);
+            row.querySelector(".name").value = c.name;
+            row.querySelector(".grade").value = c.grade;
+            row.querySelector(".credits").value = c.credits;
+            row.querySelector(".weight").value = c.weight;
         });
     });
-    return totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
+
+    calculateAll();
 }
 
-function render() {
-    const container = document.getElementById('semesterContainer');
-    container.innerHTML = semesters.map((sem, sIdx) => `
-                <div class="semester-section">
-                    <div class="semester-header">
-                        <h2>Semester ${sIdx + 1}</h2>
-                        <button class="btn-remove" onclick="removeSemester(${sIdx})">Remove Semester</button>
-                    </div>
-                    <button class="add-course-btn" onclick="addCourse(${sIdx})">+ Add Course</button>
-                    ${sem.courses.map((c, cIdx) => `
-                        <div class="course">
-                            <div class="form-group">
-                                <label>Grade</label>
-                                <select onchange="updateCourse(${sIdx}, ${cIdx}, 'grade', this.value)">
-                                    ${Object.keys(gradeToGPA).map(g => `<option ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Credits</label>
-                                <input type="number" min="0.5" step="0.5" value="${c.credits}" 
-                                       onchange="updateCourse(${sIdx}, ${cIdx}, 'credits', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label>Rigor Level</label>
-                                <select onchange="updateCourse(${sIdx}, ${cIdx}, 'rigor', this.value)">
-                                    ${Object.keys(rigorMultiplier).map(r => `<option ${c.rigor === r ? 'selected' : ''}>${r}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Weighted GPA</label>
-                                <input type="text" readonly value="${(gradeToGPA[c.grade] * rigorMultiplier[c.rigor]).toFixed(2)}">
-                            </div>
-                            <button class="btn-remove" onclick="removeCourse(${sIdx}, ${cIdx})">Remove</button>
-                        </div>
-                    `).join('')}
-                    <div class="semester-gpa">Semester GPA: ${calculateSemesterGPA(sem.courses)}</div>
-                </div>
-            `).join('');
-    document.getElementById('cumulativeGPA').textContent = calculateCumulativeGPA();
+/* =======================
+    ADD SEMESTERS/COURSES
+======================= */
+
+function addSemester() {
+    semesterCount++;
+
+    const sem = document.createElement("div");
+    sem.className = "semester";
+
+    sem.innerHTML = `
+        <h2>Semester ${semesterCount}</h2>
+
+        <div class="toggle-weight">
+            Weighted
+            <input type="checkbox" class="weight-toggle">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Course name</th>
+                    <th>Grade</th>
+                    <th>Credits</th>
+                    <th>Weight</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="course-list"></tbody>
+        </table>
+
+        <button class="add-course-btn">➕ Add Course</button>
+        <div class="gpa-line">Semester GPA: <span class="semester-gpa">0.00</span></div>
+    `;
+
+    document.getElementById("semesters").appendChild(sem);
+
+    sem.querySelector(".add-course-btn").onclick = () => {
+        addCourse(sem);
+        saveState();
+    };
+
+    sem.querySelector(".weight-toggle").onchange = () => {
+        calculateAll();
+        saveState();
+    };
+
+    for (let i = 0; i < 4; i++) addCourse(sem);
+
+    return sem;
 }
 
-addSemester();
+function addCourse(sem) {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td><input class="name" type="text"></td>
+        <td>
+            <select class="grade">
+                <option></option>
+                ${Object.keys(gradeValues).map(g => `<option>${g}</option>`).join("")}
+            </select>
+        </td>
+        <td><input class="credits" type="number" step="0.5"></td>
+        <td>
+            <select class="weight">
+                ${Object.keys(weightValues).map(w => `<option>${w}</option>`).join("")}
+            </select>
+        </td>
+        <td><span class="remove-course">✖</span></td>
+    `;
+
+    sem.querySelector(".course-list").appendChild(row);
+
+    row.querySelectorAll("input,select").forEach(el => {
+        el.addEventListener("input", () => {
+            calculateAll();
+            saveState();
+        });
+    });
+
+    row.querySelector(".remove-course").onclick = () => {
+        row.remove();
+        calculateAll();
+        saveState();
+    };
+
+    return row;
+}
+
+/* =======================
+         ANIMATION
+======================= */
+
+function animateRing(gpa) {
+    const circle = document.querySelector(".ring");
+    const total = 440;
+    const percent = Math.min(gpa / 4, 1);
+    const offset = total * (1 - percent);
+
+    circle.style.transition = "stroke-dashoffset 1s ease";
+    circle.style.strokeDashoffset = offset;
+}
+
+/* =======================
+         CALCULATIONS
+======================= */
+
+function calculateAll() {
+    let tPts = 0, tCts = 0;
+
+    document.querySelectorAll(".semester").forEach(sem => {
+        let pts = 0, cts = 0;
+        const weighted = sem.querySelector(".weight-toggle").checked;
+
+        sem.querySelectorAll("tbody tr").forEach(row => {
+            const g = row.querySelector(".grade").value;
+            const c = parseFloat(row.querySelector(".credits").value);
+            const w = row.querySelector(".weight").value;
+
+            if (g && c) {
+                const base = gradeValues[g];
+                const bonus = weighted ? weightValues[w] : 0;
+                pts += (base + bonus) * c;
+                cts += c;
+            }
+        });
+
+        const semGPA = cts ? pts / cts : 0;
+        sem.querySelector(".semester-gpa").textContent = semGPA.toFixed(2);
+
+        tPts += pts;
+        tCts += cts;
+    });
+
+    const cgpa = tCts ? tPts / tCts : 0;
+
+    document.getElementById("cumulative-gpa").textContent = cgpa.toFixed(2);
+    animateRing(cgpa);
+}
+
+/* =======================
+         DARK MODE
+======================= */
+
+document.getElementById("dark-toggle").onchange = e => {
+    document.body.classList.toggle("dark", e.target.checked);
+    saveState();
+};
+
+/* =======================
+         INIT APP
+======================= */
+
+document.getElementById("add-semester").onclick = () => {
+    addSemester();
+    saveState();
+};
+
+loadState();

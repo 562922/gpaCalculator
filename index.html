@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>GPA Calculator</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="javascript" href="calculator.js">
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <div class="container">
-        <h1>📊 GPA Calculator</h1>
-        
-        <div class="gpa-summary">
-            <div class="gpa-card">
-                <h3>Cumulative GPA</h3>
-                <div class="gpa-value" id="cumulativeGPA">0.00</div>
-            </div>
-        </div>
 
-        <div class="controls">
-            <button class="btn-add-semester" onclick="addSemester()">+ Add Semester</button>
-        </div>
-
-        <div id="semesterContainer"></div>
+    <div id="dark-toggle-container">
+        Dark Mode
+        <input id="dark-toggle" type="checkbox">
     </div>
+
+    <div id="semesters"></div>
+
+    <button id="add-semester">Add Semester</button>
+
+    <div id="cumulative-box">
+        <svg>
+            <circle class="ring-bg" cx="85" cy="85" r="70"></circle>
+            <circle class="ring" cx="85" cy="85" r="70" stroke-dasharray="440" stroke-dashoffset="440"></circle>
+        </svg>
+        <div id="cumulative-gpa">0.00</div>
+        <small>Cumulative GPA</small>
+    </div>
+
+    <script src="calculator.js"></script>
 </body>
+
 </html>
