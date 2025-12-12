@@ -17,6 +17,7 @@ const darkToggle = document.getElementById('darkModeToggle');
 if (darkToggle) {
   darkToggle.addEventListener('click', () => {
     darkToggle.classList.toggle('on');
+    darkToggle.setAttribute('aria-checked', darkToggle.classList.contains('on') ? 'true' : 'false');
     document.body.classList.toggle('dark');
   });
   darkToggle.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); darkToggle.click(); } });
@@ -47,7 +48,7 @@ function createSemester() {
       <div class="title">Semester ${id}</div>
       <div class="controls">
         <div style="display:flex;flex-direction:column;align-items:flex-end;margin-right:6px">
-          <div style="font-size:12px;color:#55606b">Weighted</div>
+          <div style="font-size:12px;color:var(--muted)">Weighted</div>
           <div class="toggle-switch" role="switch" aria-checked="false" tabindex="0" data-toggle><div class="knob"></div></div>
         </div>
         <button class="circle" data-action="delete-sem" title="Delete semester">×</button>
@@ -139,32 +140,33 @@ function setWeightsEnabled(semId, enabled) {
 
 /* ---------- Gauge attachment & rendering ---------- */
 function attachGaugeToNewest() {
-  const sems = container.querySelectorAll('.semester');
+  const sems = Array.from(container.querySelectorAll('.semester'));
   if (sems.length === 0) {
     gaugeTemplate.style.display = 'none';
+    gaugeTemplate.setAttribute('aria-hidden', 'true');
+    const inBubble = gaugeTemplate.querySelector('.gpa-value');
+    if (inBubble) inBubble.remove();
     return;
   }
 
-  const last = sems[sems.length - 1];
+  // move template into newest semester
+  const newest = sems[sems.length - 1];
+  newest.appendChild(gaugeTemplate);
+  gaugeTemplate.style.display = 'flex';
+  gaugeTemplate.style.position = 'absolute';
+  gaugeTemplate.style.right = '18px';
+  gaugeTemplate.style.bottom = '8px';
+  gaugeTemplate.setAttribute('aria-hidden', 'false');
 
-  // Move gauge to newest semester
-  last.appendChild(gaugeTemplate);
-  gaugeTemplate.style.display = 'block';
-
-  // Remove old internal text
+  // ensure only one internal numeric node (inside bubble)
   const oldVal = gaugeTemplate.querySelector('.gpa-value');
   if (oldVal) oldVal.remove();
 
-  // Add GPA text INSIDE the gauge bubble
   const valNode = document.createElement('div');
   valNode.className = 'gpa-value';
-  valNode.innerHTML = `
-      <div class="val">0.00</div>
-      <div class="muted">Cumulative GPA</div>
-  `;
+  valNode.innerHTML = `<div class="val">0.00</div><div class="muted">Cumulative GPA</div>`;
   gaugeTemplate.appendChild(valNode);
 }
-
 
 function updateAll() {
   let totalQ = 0, totalC = 0;
@@ -178,7 +180,7 @@ function updateAll() {
       const g = gv === '' ? NaN : parseFloat(gv);
       const c = cv === '' ? NaN : parseFloat(cv);
       if (!isNaN(g) && !isNaN(c) && c > 0) {
-        const eff = weighted ? Math.min(4, g + wv) : g;
+        const eff = weighted ? Math.min(5, g + wv) : g;
         semQ += eff * c;
         semC += c;
       }
@@ -193,9 +195,8 @@ function updateAll() {
   renderGauge(cumulative);
 }
 
-/* ---------- Draw & animate gauge ---------- */
+/* ---------- Draw & animate gauge (visual range still 0..4.0) ---------- */
 function renderGauge(cumulative) {
-  // guard
   const svg = gaugeTemplate.querySelector('svg');
   if (!svg || gaugeTemplate.style.display === 'none') return;
 
@@ -204,34 +205,43 @@ function renderGauge(cumulative) {
   const t0 = svg.querySelector('.tick0');
   const t4 = svg.querySelector('.tick4');
 
-  // background arc full
+  // set tick label to 4.0 (visual scale)
+  t4.textContent = '4.0';
+
+  // background arc: full
   bg.setAttribute('d', describeArc(ARC_CX, ARC_CY, ARC_R, ARC_START, ARC_END));
+  bg.setAttribute('class', 'arc-bg');
 
-  // compute target angle mapped linearly 0..4 -> ARC_START..ARC_END
-  const pct = Math.max(0, Math.min(1, cumulative / 4));
-  const targetAngle = ARC_START + (ARC_END - ARC_START) * pct;
+  // compute displayed ratio using 4.0 max (cap display at 4.0)
+  const displayedRatio = Math.min(cumulative, 4) / 4;
+  const targetAngle = ARC_START + (ARC_END - ARC_START) * displayedRatio;
 
-  // animate current angle toward target
+  // animate arc smoothly
   let current = fg._angle !== undefined ? fg._angle : ARC_START;
-  const animate = () => {
+  const step = () => {
     current = current + (targetAngle - current) * 0.18;
     fg.setAttribute('d', describeArc(ARC_CX, ARC_CY, ARC_R, ARC_START, current));
     fg._angle = current;
-    if (Math.abs(current - targetAngle) > 0.02) requestAnimationFrame(animate);
+    if (Math.abs(current - targetAngle) > 0.02) requestAnimationFrame(step);
   };
-  animate();
+  step();
 
-  // place ticks
+  // ticks positions
   const p0 = polar(ARC_CX, ARC_CY, ARC_R, ARC_START);
   const p4 = polar(ARC_CX, ARC_CY, ARC_R, ARC_END);
   if (t0) { t0.setAttribute('x', (p0.x - 6).toFixed(2)); t0.setAttribute('y', (p0.y + 4).toFixed(2)); }
   if (t4) { t4.setAttribute('x', (p4.x - 6).toFixed(2)); t4.setAttribute('y', (p4.y + 4).toFixed(2)); }
 
-  // update numeric text inside newest semester's gpa-value
-  const valNode = document.querySelector('.semester:last-child .gpa-value .val');
-  if (valNode) valNode.textContent = cumulative.toFixed(2);
+  // update numeric text inside the bubble with true cumulative (can be >4)
+  const valNode = document.querySelector('.semester:last-child #gaugeTemplate .gpa-value .val') ||
+    gaugeTemplate.querySelector('.gpa-value .val') ||
+    document.querySelector('.semester:last-child .gpa-value .val');
+
+  // fallback that always finds the bubble text
+  const bubbleVal = gaugeTemplate.querySelector('.gpa-value .val') || document.querySelector('.gpa-value .val');
+  if (bubbleVal) bubbleVal.textContent = cumulative.toFixed(2);
 }
 
-/* ---------- Init wiring ---------- */
+/* ---------- Init ---------- */
 document.getElementById('addSemester').addEventListener('click', createSemester);
 createSemester();
