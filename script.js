@@ -245,3 +245,41 @@ function renderGauge(cumulative) {
 /* ---------- Init ---------- */
 document.getElementById('addSemester').addEventListener('click', createSemester);
 createSemester();
+
+function animateGauge(gpa) {
+    const arc = document.getElementById("cumulativeGaugeArc");
+    const text = document.getElementById("cumulativeGaugeText");
+
+    // Show true GPA even if above 4.0 (weighted)
+    text.textContent = gpa.toFixed(2);
+
+    // Animation renders 0 → 4.0 only
+    let displayValue = Math.min(gpa, 4.0);
+
+    // Arc measurement
+    const radius = 80;
+    const circumference = Math.PI * radius;
+
+    let start = null;
+    const duration = 600; // animation ms
+
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+
+        const eased = progress < 1 ? progress * progress : 1; // ease-in
+
+        const current = eased * (displayValue / 4.0);
+
+        const offset = circumference * (1 - current);
+
+        arc.style.strokeDasharray = `${circumference}`;
+        arc.style.strokeDashoffset = `${offset}`;
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        }
+    }
+
+    requestAnimationFrame(step);
+}
